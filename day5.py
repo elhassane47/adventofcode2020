@@ -1,3 +1,4 @@
+from collections import Counter
 
 def parse_coordinates(coords):
     """694, 732 -> 290, 328"""
@@ -25,6 +26,24 @@ def build_vertical(points, lines):
         lines.append(coo)
 
 
+def verify_diagonal(points):
+    """
+    diagonal tan(x) = tan(45degres) = b/a = 1
+    """
+    b = points[2] - points[0]
+    a = points[3] - points[1]
+    return abs(b/a) == 1
+
+
+def build_diagonal(points, lines):
+    stx = 1 if points[0] < points[2] else -1
+    sty = 1 if points[1] < points[3] else -1
+
+    dist = abs(points[3] - points[1])
+    for i in range(dist+1):
+        lines.append((points[0] + stx * i, points[1] + sty * i))
+
+
 if __name__ == "__main__":
 
     starting_points = []
@@ -37,12 +56,17 @@ if __name__ == "__main__":
     for point in starting_points:
         if point[1] == point[3]:
             build_horizontal(point, xlines)
-        if point[0] == point[2]:
+        elif point[0] == point[2]:
             build_vertical(point, xlines)
-    from collections import Counter
+        elif verify_diagonal(point):
+            build_diagonal(point, xlines)
+    # point = (1,3,3,1)
+    # build_diagonal(point, xlines)
+
     counter = Counter(xlines)
 
     nodes = sum(1 for i in counter.values() if i >= 2)
-
     print("nodes", nodes)
+
+
 
