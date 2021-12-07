@@ -69,13 +69,16 @@ if __name__ == "__main__":
     for b in boards:
         boards_obj.append(Board(b))
 
+    winners = []
     for dr_n in drawn_numbers:
-        for bo in boards_obj:
+        for idx, bo in enumerate(boards_obj):
             bo.number_exist(dr_n)
-            if bo.is_bingo():
-                sum = bo.sum_numbers()
-                print("this is it", dr_n * sum)
-                exit(0)
+            if bo.is_bingo() and idx not in winners:
+                winners.append(idx)
+
+                if len(winners) == len(boards_obj):
+                    sx = bo.sum_numbers()
+                    print("this is it", dr_n * sx)
 
 
 
